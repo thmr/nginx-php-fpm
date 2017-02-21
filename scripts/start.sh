@@ -34,8 +34,7 @@ fi
 
  # Pull down code from git for our site!
  if [ ! -z "$GIT_REPO" ]; then
-   # Remove the test index file
-   rm -Rf /var/www/html/*
+   
    GIT_COMMAND='git clone '
    if [ ! -z "$GIT_BRANCH" ]; then
      GIT_COMMAND=${GIT_COMMAND}" -b ${GIT_BRANCH}"
