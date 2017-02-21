@@ -33,7 +33,7 @@ if [ ! -z "$GIT_NAME" ]; then
 fi
 
  # Pull down code from git for our site!
- if [ ! -z "$GIT_REPO" ]; then
+if [ ! -z "$GIT_REPO" ]; then
    
    GIT_COMMAND='git clone '
    if [ ! -z "$GIT_BRANCH" ]; then
@@ -51,7 +51,6 @@ fi
    fi
    ${GIT_COMMAND} /var/www/html || exit 1
    chown -Rf nginx.nginx /var/www/html
- fi
 fi
 
 # Try auto install for composer
