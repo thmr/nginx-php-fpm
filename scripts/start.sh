@@ -32,33 +32,47 @@ if [ ! -z "$GIT_NAME" ]; then
  git config --global push.default simple
 fi
 
+# Dont pull code down if the .git folder exists
+if [ ! -d "/var/www/html/.git" ]; then
+ # Pull down code from git for our site!
+ if [ ! -z "$GIT_REPO" ]; then
+   # Remove the test index file
+   # rm -Rf /var/www/html/*
+   GIT_COMMAND='git clone '
+   if [ ! -z "$GIT_BRANCH" ]; then
+     GIT_COMMAND=${GIT_COMMAND}" -b ${GIT_BRANCH}"
+   fi
 
-# Pull down code from git for our site!
-if [ ! -z "$GIT_REPO" ]; then
- 
- # Dont pull code down if the .git folder exists
-  if [ ! -d "/var/www/html/.git" ]; then
-    GIT_COMMAND='git clone '
-  else
-    GIT_COMMAND='git pull '
-  fi
-  if [ ! -z "$GIT_BRANCH" ]; then
-    GIT_COMMAND=${GIT_COMMAND}" -b ${GIT_BRANCH}"
-  fi
-  if [ -z "$GIT_USERNAME" ] && [ -z "$GIT_PERSONAL_TOKEN" ]; then
-     GIT_COMMAND=${GIT_COMMAND}" ${GIT_REPO}"
-  else
-   if [[ "$GIT_USE_SSH" == "1" ]]; then
+   if [ -z "$GIT_USERNAME" ] && [ -z "$GIT_PERSONAL_TOKEN" ]; then
      GIT_COMMAND=${GIT_COMMAND}" ${GIT_REPO}"
    else
-     GIT_COMMAND=${GIT_COMMAND}" https://${GIT_USERNAME}:${GIT_PERSONAL_TOKEN}@${GIT_REPO}"
+    if [[ "$GIT_USE_SSH" == "1" ]]; then
+      GIT_COMMAND=${GIT_COMMAND}" ${GIT_REPO}"
+    else
+      GIT_COMMAND=${GIT_COMMAND}" https://${GIT_USERNAME}:${GIT_PERSONAL_TOKEN}@${GIT_REPO}"
+    fi
    fi
+   ${GIT_COMMAND} /var/www/html || exit 1
+   chown -Rf nginx.nginx /var/www/html
+ fi
+else
+ GIT_COMMAND='git pull '
+ if [ ! -z "$GIT_BRANCH" ]; then
+   GIT_COMMAND=${GIT_COMMAND}" -b ${GIT_BRANCH}"
+ fi
+
+ if [ -z "$GIT_USERNAME" ] && [ -z "$GIT_PERSONAL_TOKEN" ]; then
+   GIT_COMMAND=${GIT_COMMAND}" ${GIT_REPO}"
+ else
+  if [[ "$GIT_USE_SSH" == "1" ]]; then
+    GIT_COMMAND=${GIT_COMMAND}" ${GIT_REPO}"
+  else
+	echo "pulling from  ${GIT_REPO}"  
+    GIT_COMMAND=${GIT_COMMAND}" https://${GIT_USERNAME}:${GIT_PERSONAL_TOKEN}@${GIT_REPO}"
   fi
-  ${GIT_COMMAND} /var/www/html || exit 1
-  chown -Rf nginx.nginx /var/www/html
+ fi
+ ${GIT_COMMAND} || exit 1
 fi
-
-
 # Try auto install for composer
 if [ -f "$WEBROOT/composer.lock" ]; then
   php composer.phar install --no-dev
@@ -147,4 +161,3 @@ fi
 
 # Start supervisord and services
 exec /usr/bin/supervisord -n -c /etc/supervisord.conf
-
