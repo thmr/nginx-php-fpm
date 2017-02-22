@@ -75,7 +75,8 @@ else
 fi
 # Try auto install for composer
 if [ -f "$WEBROOT/composer.lock" ]; then
-  php composer.phar install --no-dev
+  #php composer.phar install --no-dev
+  composer update --no-dev
 fi
 
 # Enable custom nginx config files if they exist
@@ -146,6 +147,13 @@ else
   # Always chown webroot for better mounting
   chown -Rf nginx.nginx /var/www/html
 fi
+
+chmod ugo+rwx /var/www/html/storage/framework/
+chmod ugo+rwx /var/www/html/storage/logs/
+chmod ugo+rwx /var/www/html/storage/laravel-backups/
+chmod ugo+rwx /var/www/html/bootstrap/cache/
+chmod ugo+rwx /var/www/html/images/
+chmod ugo+rwx /var/www/html/uploads/
 
 # Run custom scripts
 if [[ "$RUN_SCRIPTS" == "1" ]] ; then
