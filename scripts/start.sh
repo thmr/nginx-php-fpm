@@ -154,6 +154,7 @@ chmod ugo+rwx /var/www/html/storage/laravel-backups/
 chmod ugo+rwx /var/www/html/bootstrap/cache/
 chmod ugo+rwx /var/www/html/images/
 chmod ugo+rwx /var/www/html/uploads/
+chmod ugo+rwx /var/www/html/storage/app/
 
 # Run custom scripts
 if [[ "$RUN_SCRIPTS" == "1" ]] ; then
