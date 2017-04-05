@@ -71,7 +71,8 @@ else
     GIT_COMMAND=${GIT_COMMAND}" https://${GIT_USERNAME}:${GIT_PERSONAL_TOKEN}@${GIT_REPO}"
   fi
  fi
- ${GIT_COMMAND} || exit 1
+ ${GIT_COMMAND} 
+ #|| exit 1
 fi
 # Try auto install for composer
 if [ -f "$WEBROOT/composer.lock" ]; then
