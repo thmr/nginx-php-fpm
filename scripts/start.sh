@@ -124,7 +124,7 @@ fi
 
 # Increase the memory_limit
 if [ ! -z "$PHP_MEM_LIMIT" ]; then
- sed -i "s/memory_limit = 128M/memory_limit = ${PHP_MEM_LIMIT}M/g" /usr/local/etc/php/conf.d/docker-vars.ini
+ sed -i "s/memory_limit = 512M/memory_limit = ${PHP_MEM_LIMIT}M/g" /usr/local/etc/php/conf.d/docker-vars.ini
 fi
 
 # Increase the post_max_size
