@@ -175,7 +175,7 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     mkdir -p /var/log/supervisor && \
 	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php -r "if (hash_file('SHA384', 'composer-setup.php') === '${composer_hash}') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
-	php composer-setup.php && \
+	php -r composer-setup.php && \
 	php -r "unlink('composer-setup.php');" && \
     pip install -U pip && \
     pip install -U certbot && \
