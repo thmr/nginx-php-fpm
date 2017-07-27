@@ -32,6 +32,24 @@ if [ ! -z "$GIT_NAME" ]; then
  git config --global push.default simple
 fi
 
+if [ ! -f "/var/www/html/.env" ] && ["$INSTALL_LARAVEL" == "1"]; then
+	mkdir -p /var/www/html/laravelinstall &&\
+	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+	php -r "if (hash_file('SHA384', 'composer-setup.php') === '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
+	php composer-setup.php && \
+	php -r "unlink('composer-setup.php');" &&\
+	php composer.phar create-project laravel/laravel /var/www/html/laravelinstall "5.4.*" --prefer-dist &&\
+	cp -r  /var/www/html/laravelinstall/. /var/www/html/ &&\
+	rm -rf /var/www/html/ &&\
+	sed -i \
+		-e 's/DB_DATABASE=homestead/DB_DATABASE='"$MYSQL_DATABASE"'/g' \
+		-e 's/DB_USERNAME=homestead/DB_USERNAME=root /g' \
+		-e 's/DB_PASSWORD=secret/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' \
+	/var/www/html/.env
+else
+	echo "Skipping laravel install. Env file alredy exists"
+fi
+
 # Dont pull code down if the .git folder exists
 if [ ! -d "/var/www/html/.git" ]; then
  # Pull down code from git for our site!
