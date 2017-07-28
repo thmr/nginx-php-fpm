@@ -46,9 +46,16 @@ if [ ! -f "/var/www/html/.env" ]; then
 		-e 's/DB_DATABASE=homestead/DB_DATABASE='"$MYSQL_DATABASE"'/g' \
 		-e 's/DB_USERNAME=homestead/DB_USERNAME=root /g' \
 		-e 's/DB_PASSWORD=secret/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' \
-	/var/www/html/.env
+	/var/www/html/.env &&\
+	rm -rf .gitignore &&\
+	rm -rf /var/www/html/routes/web.php
 else
 	echo "Skipping laravel install. Env file alredy exists"
+	sed -i \
+		-e 's/DB_DATABASE=homestead/DB_DATABASE='"$MYSQL_DATABASE"'/g' \
+		-e 's/DB_USERNAME=homestead/DB_USERNAME=root /g' \
+		-e 's/DB_PASSWORD=secret/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' \
+	/var/www/html/.env
 fi
 
 # Dont pull code down if the .git folder exists
