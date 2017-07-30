@@ -55,6 +55,9 @@ else
 		-e 's/DB_DATABASE=homestead/DB_DATABASE='"$MYSQL_DATABASE"'/g' \
 		-e 's/DB_USERNAME=homestead/DB_USERNAME=root /g' \
 		-e 's/DB_PASSWORD=secret/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' \
+		-e 's/APP_ENV=local/APP_ENV=production /g' \
+		-e 's/localhost/'"$PRODUCTION_DOMAIN"' /g' \
+		-e 's/DB_HOST=127.0.0.1/DB_HOST='"$MYSQL_HOST"' /g' \
 	/var/www/html/.env
 fi
 
