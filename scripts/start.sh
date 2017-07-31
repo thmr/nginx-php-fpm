@@ -55,14 +55,12 @@ if [ ! -f "/var/www/html/.env" ]; then
 else
 	echo "Skipping laravel install. Env file alredy exists. Stashing potentialy unwanted changes..."
 	git stash &&\
-	sed -i \
-		-e 's/DB_DATABASE=homestead/DB_DATABASE='"$MYSQL_DATABASE"'/g' \
-		-e 's/DB_USERNAME=homestead/DB_USERNAME=root /g' \
-		-e 's/DB_PASSWORD=secret/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' \
-		-e 's/APP_ENV=local/APP_ENV=production /g' \
-		-e 's/localhost/'"$PRODUCTION_DOMAIN"' /g' \
-		-e 's/DB_HOST=127.0.0.1/DB_HOST='"$MYSQL_HOST"' /g' \
-	/var/www/html/.env
+	sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
+	sed -i -e 's/DB_USERNAME=.*/DB_USERNAME=root /g' /var/www/html/.env
+	sed -i -e 's/DB_PASSWORD=.*/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' /var/www/html/.env
+	sed -i -e 's/APP_ENV=.*/APP_ENV=production /g' /var/www/html/.env
+	sed -i -e 's/APP_URL=.*/APP_URL='"$PRODUCTION_DOMAIN"' /g' /var/www/html/.env
+	sed -i -e 's/DB_HOST=.*/DB_HOST='"$MYSQL_HOST"' /g' /var/www/html/.env
 fi
 
 # Dont pull code down if the .git folder exists
