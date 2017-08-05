@@ -104,11 +104,11 @@ else
  #|| exit 1
 fi
 # Try auto install for composer
-if [ -f "$WEBROOT/composer.lock" ]; then
+if [ -f "$WEBROOT/../composer.lock" ]; then
   #php composer.phar install --no-dev
   echo "Runnig composer update"
   composer update --no-dev
-  if [ -f "$WEBROOT/vendor/tymon/jwt-auth/src/Providers/JWTAuthServiceProvider.php" ]; then
+  if [ -f "$WEBROOT/../vendor/tymon/jwt-auth/src/Providers/JWTAuthServiceProvider.php" ]; then
     echo "Runnig artisan"
     php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\JWTAuthServiceProvider"
     php artisan jwt:generate
