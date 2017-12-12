@@ -33,6 +33,9 @@ if [ ! -z "$GIT_NAME" ]; then
 fi
 
 if [  ! -z "$SKIP_LARAVEL" ]; then
+
+  echo "Trying laravel install."
+
   if [ ! -f "/var/www/html/.env" ]; then
   	rm -rf /var/www/html/laravelinstall &&\
   	mkdir -p /var/www/html/laravelinstall &&\
