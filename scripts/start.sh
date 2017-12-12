@@ -32,33 +32,35 @@ if [ ! -z "$GIT_NAME" ]; then
  git config --global push.default simple
 fi
 
-if [ ! -f "/var/www/html/.env" ]; then
-	rm -rf /var/www/html/laravelinstall &&\
-	mkdir -p /var/www/html/laravelinstall &&\
-	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-	php -r "if (hash_file('SHA384', 'composer-setup.php') === '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
-	php composer-setup.php && \
-	php -r "unlink('composer-setup.php');" &&\
-	php composer.phar create-project laravel/laravel /var/www/html/laravelinstall "5.4.*" --prefer-dist &&\
-	cp -r  /var/www/html/laravelinstall/. /var/www/html/ &&\
-	rm -rf /var/www/html/laravelinstall &&\
-		sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
-		sed -i -e 's/DB_USERNAME=.*/DB_USERNAME=root /g' /var/www/html/.env
-		sed -i -e 's/DB_PASSWORD=.*/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' /var/www/html/.env
-		sed -i -e 's/APP_ENV=.*/APP_ENV=production /g' /var/www/html/.env
-		sed -i -e 's/APP_URL=.*/APP_URL='"$PRODUCTION_DOMAIN"' /g' /var/www/html/.env
-		sed -i -e 's/DB_HOST=.*/DB_HOST='"$MYSQL_HOST"' /g' /var/www/html/.env
-	rm -rf .gitignore &&\
-	rm -rf /var/www/html/routes/web.php
-else
-	echo "Skipping laravel install. Env file alredy exists. Stashing potentialy unwanted changes..."
-	git stash &&\
-	sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
-	sed -i -e 's/DB_USERNAME=.*/DB_USERNAME=root /g' /var/www/html/.env
-	sed -i -e 's/DB_PASSWORD=.*/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' /var/www/html/.env
-	sed -i -e 's/APP_ENV=.*/APP_ENV=production /g' /var/www/html/.env
-	sed -i -e 's/APP_URL=.*/APP_URL='"$PRODUCTION_DOMAIN"' /g' /var/www/html/.env
-	sed -i -e 's/DB_HOST=.*/DB_HOST='"$MYSQL_HOST"' /g' /var/www/html/.env
+if [  ! -z "$SKIP_LARAVEL" ]; then
+  if [ ! -f "/var/www/html/.env" ]; then
+  	rm -rf /var/www/html/laravelinstall &&\
+  	mkdir -p /var/www/html/laravelinstall &&\
+  	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+  	php -r "if (hash_file('SHA384', 'composer-setup.php') === '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
+  	php composer-setup.php && \
+  	php -r "unlink('composer-setup.php');" &&\
+  	php composer.phar create-project laravel/laravel /var/www/html/laravelinstall "5.4.*" --prefer-dist &&\
+  	cp -r  /var/www/html/laravelinstall/. /var/www/html/ &&\
+  	rm -rf /var/www/html/laravelinstall &&\
+  		sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
+  		sed -i -e 's/DB_USERNAME=.*/DB_USERNAME=root /g' /var/www/html/.env
+  		sed -i -e 's/DB_PASSWORD=.*/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' /var/www/html/.env
+  		sed -i -e 's/APP_ENV=.*/APP_ENV=production /g' /var/www/html/.env
+  		sed -i -e 's/APP_URL=.*/APP_URL='"$PRODUCTION_DOMAIN"' /g' /var/www/html/.env
+  		sed -i -e 's/DB_HOST=.*/DB_HOST='"$MYSQL_HOST"' /g' /var/www/html/.env
+  	rm -rf .gitignore &&\
+  	rm -rf /var/www/html/routes/web.php
+  else
+  	echo "Skipping laravel install. Env file alredy exists. Stashing potentialy unwanted changes..."
+  	git stash &&\
+  	sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
+  	sed -i -e 's/DB_USERNAME=.*/DB_USERNAME=root /g' /var/www/html/.env
+  	sed -i -e 's/DB_PASSWORD=.*/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' /var/www/html/.env
+  	sed -i -e 's/APP_ENV=.*/APP_ENV=production /g' /var/www/html/.env
+  	sed -i -e 's/APP_URL=.*/APP_URL='"$PRODUCTION_DOMAIN"' /g' /var/www/html/.env
+  	sed -i -e 's/DB_HOST=.*/DB_HOST='"$MYSQL_HOST"' /g' /var/www/html/.env
+  fi
 fi
 
 # Dont pull code down if the .git folder exists
@@ -96,23 +98,25 @@ else
   if [[ "$GIT_USE_SSH" == "1" ]]; then
     GIT_COMMAND=${GIT_COMMAND}" ${GIT_REPO}"
   else
-	echo "pulling from  ${GIT_REPO}"  
+	echo "pulling from  ${GIT_REPO}"
     GIT_COMMAND=${GIT_COMMAND}" https://${GIT_USERNAME}:${GIT_PERSONAL_TOKEN}@${GIT_REPO}"
   fi
  fi
- ${GIT_COMMAND} 
+ ${GIT_COMMAND}
  #|| exit 1
 fi
-# Try auto install for composer
-if [ -f "$WEBROOT/../composer.lock" ]; then
-  #php composer.phar install --no-dev
-  echo "Runnig composer update"
-  php composer.phar update --no-dev
-  if [ -f "$WEBROOT/../vendor/tymon/jwt-auth/src/Providers/JWTAuthServiceProvider.php" ]; then
-    echo "Runnig artisan"
-    php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\JWTAuthServiceProvider"
-    php artisan jwt:generate
-	echo "Artisan ran"
+if [  ! -z "$SKIP_LARAVEL" ]; then
+  # Try auto install for composer
+  if [ -f "$WEBROOT/../composer.lock" ]; then
+    #php composer.phar install --no-dev
+    echo "Runnig composer update"
+    php composer.phar update --no-dev
+    if [ -f "$WEBROOT/../vendor/tymon/jwt-auth/src/Providers/JWTAuthServiceProvider.php" ]; then
+      echo "Runnig artisan"
+      php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\JWTAuthServiceProvider"
+      php artisan jwt:generate
+  	echo "Artisan ran"
+    fi
   fi
 fi
 

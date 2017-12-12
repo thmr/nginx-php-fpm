@@ -9,10 +9,11 @@ if [ -z "$GIT_NAME" ]; then
  echo "You need to pass the \$GIT_NAME variable to the container for this to work"
  exit
 fi
-
-# Try auto install for composer
-if [ -f "$WEBROOT/composer.lock" ]; then
-  php composer.phar install --no-dev
+if [  ! -z "$SKIP_LARAVEL" ]; then
+  # Try auto install for composer
+  if [ -f "$WEBROOT/composer.lock" ]; then
+    php composer.phar install --no-dev
+  fi
 fi
 
 cd /var/www/html
