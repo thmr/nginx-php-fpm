@@ -32,7 +32,7 @@ if [ ! -z "$GIT_NAME" ]; then
  git config --global push.default simple
 fi
 
-if [  ! -z "$SKIP_LARAVEL" ]; then
+if [[ "$SKIP_LARAVEL"  == "No" ]]; then
   if [ ! -f "/var/www/html/.env" ]; then
     echo "Trying laravel install."
   	rm -rf /var/www/html/laravelinstall &&\
