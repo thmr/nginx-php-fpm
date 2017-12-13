@@ -234,7 +234,7 @@ ADD conf/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
 # ADD src/ /var/www/html/
 ADD errors/ /var/www/errors
 
-# VOLUME /var/www/html
+VOLUME /var/www/html
 
 EXPOSE 443 80
 
