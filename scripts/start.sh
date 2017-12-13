@@ -33,10 +33,8 @@ if [ ! -z "$GIT_NAME" ]; then
 fi
 
 if [  ! -z "$SKIP_LARAVEL" ]; then
-
-  echo "Trying laravel install."
-
   if [ ! -f "/var/www/html/.env" ]; then
+    echo "Trying laravel install."
   	rm -rf /var/www/html/laravelinstall &&\
   	mkdir -p /var/www/html/laravelinstall &&\
   	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
@@ -55,7 +53,7 @@ if [  ! -z "$SKIP_LARAVEL" ]; then
   	rm -rf .gitignore &&\
   	rm -rf /var/www/html/routes/web.php
   else
-  	echo "Skipping laravel install. Env file alredy exists. Stashing potentialy unwanted changes..."
+  	echo "Skipping laravel install. Env file alredy exists. Stashing potenttialy unwanted changes..."
   	git stash &&\
   	sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
   	sed -i -e 's/DB_USERNAME=.*/DB_USERNAME=root /g' /var/www/html/.env
