@@ -69,7 +69,7 @@ if [ ! -d "/var/www/html/.git" ]; then
  # Pull down code from git for our site!
  if [ ! -z "$GIT_REPO" ]; then
    # Remove the test index file
-   [[ "$RESET_ALL" == "1" ]] ; then
+   if [[ "$RESET_ALL" == "1" ]] ; then
      rm -Rf /var/www/html/*
    fi
    GIT_COMMAND='git clone '
