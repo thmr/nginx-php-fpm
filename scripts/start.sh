@@ -193,14 +193,15 @@ else
   # Always chown webroot for better mounting
   chown -Rf nginx.nginx /var/www/html
 fi
-
-chmod ugo+rwx /var/www/html/storage/framework/
-chmod ugo+rwx /var/www/html/storage/logs/
-chmod ugo+rwx /var/www/html/storage/laravel-backups/
-chmod ugo+rwx /var/www/html/bootstrap/cache/
-chmod ugo+rwx /var/www/html/images/
-chmod ugo+rwx /var/www/html/uploads/
-chmod ugo+rwx /var/www/html/storage/app/
+if [  ! -z "$SKIP_LARAVEL" ]; then
+    chmod ugo+rwx /var/www/html/storage/framework/
+    chmod ugo+rwx /var/www/html/storage/logs/
+    chmod ugo+rwx /var/www/html/storage/laravel-backups/
+    chmod ugo+rwx /var/www/html/bootstrap/cache/
+    chmod ugo+rwx /var/www/html/images/
+    chmod ugo+rwx /var/www/html/uploads/
+    chmod ugo+rwx /var/www/html/storage/app/
+fi
 
 # Run custom scripts
 if [[ "$RUN_SCRIPTS" == "1" ]] ; then
