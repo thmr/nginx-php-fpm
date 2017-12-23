@@ -74,6 +74,7 @@ if [ ! -d "/var/www/html/.git" ]; then
  if [[ "$RESET_ALL" == "1" ]] ; then
    echo "Eliminating the html folder"
    rm -Rf /var/www/html/[a-zA-Z_-]*
+   rm -Rf /var/www/html/.[a-zA-Z_-]*
    pwd
    ls -la
  fi
@@ -91,7 +92,7 @@ if [ ! -d "/var/www/html/.git" ]; then
     if [[ "$GIT_USE_SSH" == "1" ]]; then
       GIT_COMMAND=${GIT_COMMAND}" ${GIT_REPO}"
     else
-      GIT_COMMAND=${GIT_COMMAND}" https://${GIT_USERNAME}:${GIT_PERSONAL_TOKEN}@${GIT_REPO} ."
+      GIT_COMMAND=${GIT_COMMAND}" https://${GIT_USERNAME}:${GIT_PERSONAL_TOKEN}@${GIT_REPO}"
     fi
    fi
    ${GIT_COMMAND} /var/www/html || exit 1
