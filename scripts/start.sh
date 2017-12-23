@@ -66,6 +66,7 @@ fi
 
 # Remove the test index file
 if [[ "$RESET_ALL" == "1" ]] ; then
+  echo "Eliminating the html folder"
   rm -Rf /var/www/html/*
 fi
 
