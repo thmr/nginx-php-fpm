@@ -64,17 +64,20 @@ if [[ "$SKIP_LARAVEL"  == "No" ]]; then
   fi
 fi
 
-# Remove the test index file
-if [[ "$RESET_ALL" == "1" ]] ; then
-  echo "Eliminating the html folder"
-  rm -Rf /var/www/html/*
-  pwd
-  ls -la
-fi
+
 
 # Dont pull code down if the .git folder exists
 if [ ! -d "/var/www/html/.git" ]; then
  # Pull down code from git for our site!
+
+ # Remove the test index file
+ if [[ "$RESET_ALL" == "1" ]] ; then
+   echo "Eliminating the html folder"
+   rm -Rf /var/www/html/[a-zA-Z_-]*
+   pwd
+   ls -la
+ fi
+
  if [ ! -z "$GIT_REPO" ]; then
 
    GIT_COMMAND='git clone '
