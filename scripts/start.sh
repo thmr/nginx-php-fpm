@@ -37,10 +37,19 @@ if [[ "$SKIP_LARAVEL"  == "No" ]]; then
     echo "Trying laravel install."
   	rm -rf /var/www/html/laravelinstall &&\
   	mkdir -p /var/www/html/laravelinstall &&\
-  	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-  	php -r "if (hash_file('SHA384', 'composer-setup.php') === '$COMPOSER_HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
-  	php composer-setup.php && \
-  	php -r "unlink('composer-setup.php');" &&\
+	EXPECTED_SIGNATURE=$(wget -q -O - https://composer.github.io/installer.sig) &&\
+	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&\
+	ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');") &&\
+	if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ] 
+	  then
+	    >&2 echo 'ERROR: Invalid installer signature'
+        rm composer-setup.php
+	  exit 1
+	fi
+	php composer-setup.php --quiet &&\
+	RESULT=$? &&\
+	echo RESULT &&\
+	rm composer-setup.php &&\
   	php composer.phar create-project laravel/laravel /var/www/html/laravelinstall "5.4.*" --prefer-dist &&\
   	cp -r  /var/www/html/laravelinstall/. /var/www/html/ &&\
   	rm -rf /var/www/html/laravelinstall &&\
