@@ -59,8 +59,8 @@ if [[ "$SKIP_LARAVEL"  == "No" ]]; then
   		sed -i -e 's/APP_ENV=.*/APP_ENV=production /g' /var/www/html/.env
   		sed -i -e 's/APP_URL=.*/APP_URL='"$PRODUCTION_DOMAIN"' /g' /var/www/html/.env
   		sed -i -e 's/DB_HOST=.*/DB_HOST='"$MYSQL_HOST"' /g' /var/www/html/.env
-  	rm -rf .gitignore &&\
-  	rm -rf /var/www/html/routes/web.php
+  	rm -rf .gitignore
+  	#rm -rf /var/www/html/routes/web.php
   else
   	echo "Skipping laravel install. Env file alredy exists. Stashing potenttialy unwanted changes..."
   	git stash &&\
