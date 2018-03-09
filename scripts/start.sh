@@ -48,9 +48,9 @@ if [[ "$SKIP_LARAVEL"  == "No" ]]; then
 	fi
 	php composer-setup.php --quiet &&\
 	RESULT=$? &&\
-	echo RESULT &&\
+	echo $RESULT &&\
 	rm composer-setup.php &&\
-  	php composer.phar create-project laravel/laravel /var/www/html/laravelinstall "5.4.*" --prefer-dist &&\
+  	php composer.phar create-project laravel/laravel /var/www/html/laravelinstall "$LARAVEL_VERSION" --prefer-dist &&\
   	cp -r  /var/www/html/laravelinstall/. /var/www/html/ &&\
   	rm -rf /var/www/html/laravelinstall &&\
   		sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
@@ -129,7 +129,7 @@ fi
 if [  ! -z "$SKIP_LARAVEL" ]; then
   # Try auto install for composer
   if [ -f "$WEBROOT/../composer.lock" ]; then
-    #php composer.phar install --no-dev
+    php composer.phar install --no-dev
     echo "Runnig composer update"
     php composer.phar update --no-dev
     if [ -f "$WEBROOT/../vendor/tymon/jwt-auth/src/Providers/JWTAuthServiceProvider.php" ]; then
