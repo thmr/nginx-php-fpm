@@ -53,8 +53,8 @@ if [[ "$SKIP_LARAVEL"  == "No" ]]; then
   	php composer.phar create-project laravel/laravel /var/www/html/laravelinstall "$LARAVEL_VERSION" --prefer-dist &&\
   	cp -r  /var/www/html/laravelinstall/. /var/www/html/ &&\
   	rm -rf /var/www/html/laravelinstall
-  	if [ ! -z "$ENV_FILE_CONTENT" ]; then
-        echo -e  "$ENV_FILE_CONTENT" > /var/www/html/.env
+  	if [[ "$SKIP_ENV" == "1" ]] ; then
+        echo "Skipping env file creation."
   	else
 
   	    sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
