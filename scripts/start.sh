@@ -52,24 +52,34 @@ if [[ "$SKIP_LARAVEL"  == "No" ]]; then
 	rm composer-setup.php &&\
   	php composer.phar create-project laravel/laravel /var/www/html/laravelinstall "$LARAVEL_VERSION" --prefer-dist &&\
   	cp -r  /var/www/html/laravelinstall/. /var/www/html/ &&\
-  	rm -rf /var/www/html/laravelinstall &&\
-  		sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
-  		sed -i -e 's/DB_USERNAME=.*/DB_USERNAME=root /g' /var/www/html/.env
-  		sed -i -e 's/DB_PASSWORD=.*/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' /var/www/html/.env
-  		sed -i -e 's/APP_ENV=.*/APP_ENV=production /g' /var/www/html/.env
-  		sed -i -e 's/APP_URL=.*/APP_URL='"$PRODUCTION_DOMAIN"' /g' /var/www/html/.env
-  		sed -i -e 's/DB_HOST=.*/DB_HOST='"$MYSQL_HOST"' /g' /var/www/html/.env
+  	rm -rf /var/www/html/laravelinstall
+  	if [ ! -z "$ENV_FILE_CONTENT" ]; then
+        echo -e  "$ENV_FILE_CONTENT" > /var/www/html/.env
+  	else
+
+  	    sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
+  	    sed -i -e 's/DB_USERNAME=.*/DB_USERNAME=root /g' /var/www/html/.env
+  	    sed -i -e 's/DB_PASSWORD=.*/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' /var/www/html/.env
+  	    sed -i -e 's/APP_ENV=.*/APP_ENV=production /g' /var/www/html/.env
+  	    sed -i -e 's/APP_URL=.*/APP_URL='"$PRODUCTION_DOMAIN"' /g' /var/www/html/.env
+  	    sed -i -e 's/DB_HOST=.*/DB_HOST='"$MYSQL_HOST"' /g' /var/www/html/.env
+  	fi
   	rm -rf .gitignore
   	#rm -rf /var/www/html/routes/web.php
   else
   	echo "Skipping laravel install. Env file alredy exists. Stashing potenttialy unwanted changes..."
-  	git stash &&\
-  	sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
-  	sed -i -e 's/DB_USERNAME=.*/DB_USERNAME=root /g' /var/www/html/.env
-  	sed -i -e 's/DB_PASSWORD=.*/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' /var/www/html/.env
-  	sed -i -e 's/APP_ENV=.*/APP_ENV=production /g' /var/www/html/.env
-  	sed -i -e 's/APP_URL=.*/APP_URL='"$PRODUCTION_DOMAIN"' /g' /var/www/html/.env
-  	sed -i -e 's/DB_HOST=.*/DB_HOST='"$MYSQL_HOST"' /g' /var/www/html/.env
+  	git stash
+  	if [ ! -z "$ENV_FILE_CONTENT" ]; then
+        echo -e  "$ENV_FILE_CONTENT" > /var/www/html/.env
+  	else
+
+  	    sed -i -e 's/DB_DATABASE=.*/DB_DATABASE='"$MYSQL_DATABASE"'/g' /var/www/html/.env
+  	    sed -i -e 's/DB_USERNAME=.*/DB_USERNAME=root /g' /var/www/html/.env
+  	    sed -i -e 's/DB_PASSWORD=.*/DB_PASSWORD='"$MYSQL_ROOT_PASSWORD"' /g' /var/www/html/.env
+  	    sed -i -e 's/APP_ENV=.*/APP_ENV=production /g' /var/www/html/.env
+  	    sed -i -e 's/APP_URL=.*/APP_URL='"$PRODUCTION_DOMAIN"' /g' /var/www/html/.env
+  	    sed -i -e 's/DB_HOST=.*/DB_HOST='"$MYSQL_HOST"' /g' /var/www/html/.env
+  	fi
   fi
 fi
 
